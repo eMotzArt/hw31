@@ -1,20 +1,23 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 # Create your models here.
 
 
-class User(models.Model):
-
+class User(AbstractUser):
+    MEMBER = 'member'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
     ROLES = [
-        ('member', 'пользователь'),
-        ('moderator', 'модератор'),
-        ('admin', 'администратор')
+        (MEMBER, 'пользователь'),
+        (MODERATOR, 'модератор'),
+        (ADMIN, 'администратор')
     ]
-    slug = models.SlugField(max_length=50)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    username = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=50, null=True)
+    # first_name = models.CharField(max_length=50) #
+    # last_name = models.CharField(max_length=50)#
+    # username = models.CharField(max_length=50, unique=True)
+    # password = models.CharField(max_length=50)
     role = models.CharField(max_length=20, choices=ROLES, default='member')
     age = models.PositiveSmallIntegerField()
     location = models.ForeignKey('ads.Location', null=True, on_delete=models.SET_NULL)
