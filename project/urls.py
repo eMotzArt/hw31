@@ -22,4 +22,5 @@ urlpatterns = [
     path('', ads.views.index),
     path('', include('ads.urls')),
     path('', include('users.urls')),
+    path('', include('selections.urls'))
 ]
