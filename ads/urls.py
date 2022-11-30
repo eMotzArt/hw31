@@ -8,7 +8,7 @@ import ads.views
 urlpatterns = [
     path('cat/', ads.views.CategoryListView.as_view()),
     path('cat/create/', ads.views.CategoryCreateView.as_view()),
-    path('cat/<int:pk>', ads.views.CategoryDetailView.as_view()),
+    path('cat/<int:pk>', ads.views.category_detail_view),
     path('cat/<int:pk>/update/', ads.views.CategoryUpdateView.as_view()),
     path('cat/<int:pk>/delete/', ads.views.CategoryDeleteView.as_view()),
 

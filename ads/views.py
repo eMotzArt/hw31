@@ -5,7 +5,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 import json
-
+from rest_framework.decorators import permission_classes, api_view
 from rest_framework.generics import RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
@@ -40,17 +40,23 @@ class CategoryListView(ListView):
         return JsonResponse(response, safe=False)
 
 @method_decorator(csrf_exempt, name='dispatch')
-class CategoryDetailView(DetailView):
-    model = Category
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def category_detail_view(request, *args, **kwargs):
+    try:
+        category = Category.objects.get(id=kwargs.get('pk'))
+    except Http404:
+        return JsonResponse({'error': 'Not found'}, status=404)
+
+    return JsonResponse(category.get_dict(), safe=False)
 
 
-    def get(self, request, *args, **kwargs):
-        try:
-            super().get(request, *args, **kwargs)
-        except Http404:
-            return JsonResponse({'error': 'Not found'}, status=404)
+    try:
+        super().get(request, *args, **kwargs)
+    except Http404:
+        return JsonResponse({'error': 'Not found'}, status=404)
 
-        return JsonResponse(CategorySerializer(self.object).data, safe=False)
+    return JsonResponse(CategorySerializer(self.object).data, safe=False)
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CategoryCreateView(CreateView):
