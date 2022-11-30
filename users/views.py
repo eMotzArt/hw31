@@ -1,5 +1,6 @@
 # Create your views here.
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 
 from users.models import User
 from users.serializers import UserSerializer, UserCreateSerializer, UserUpdateSerializer, UserDestroySerializer
@@ -8,15 +9,19 @@ from users.serializers import UserSerializer, UserCreateSerializer, UserUpdateSe
 class UsersListView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class UserDetailView(RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
 
 
 class UserCreateView(CreateAPIView):
-    queryset = User.objects.all()
+    model = User
+    # queryset = User.objects.all()
     serializer_class = UserCreateSerializer
 
 
