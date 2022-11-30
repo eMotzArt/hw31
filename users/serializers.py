@@ -18,6 +18,14 @@ class UserCreateSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
+    def create(self, validated_data):
+        user = super().create(validated_data)
+
+        user.set_password(user.password)
+        user.save()
+
+        return user
+
 class UserUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     location = serializers.CharField(read_only=True)
