@@ -16,6 +16,8 @@ class CategorySerializer(serializers.ModelSerializer):
 class AdvertisementSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(read_only=True, slug_field='name')
     author = serializers.SlugRelatedField(read_only=True, slug_field='first_name')
+    image = serializers.ImageField(read_only=True)
+    slug = serializers.CharField(allow_null=True)
     class Meta:
         model = Advertisement
         fields = ['id', 'slug', 'name', 'price', 'description', 'image', 'is_published', 'author', 'author_id', 'category', 'category_id']

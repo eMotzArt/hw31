@@ -40,9 +40,9 @@ class Command(BaseCommand):
         for item in data:
             item.pop('id')
 
-            new_ad = Location()
-            [setattr(new_ad, key, value) for key, value in item.items()]
-            new_ad.save()
+            new_loc = Location()
+            [setattr(new_loc, key, value) for key, value in item.items()]
+            new_loc.save()
         print('Locations was imported')
 
     def import_users(self):
@@ -50,9 +50,10 @@ class Command(BaseCommand):
         for item in data:
             item.pop('id')
 
-            new_ad = User()
-            [setattr(new_ad, key, value) for key, value in item.items()]
-            new_ad.save()
+            new_user = User()
+            [setattr(new_user, key, value) for key, value in item.items()]
+            new_user.set_password(new_user.password)
+            new_user.save()
         print('Users was imported')
 
 
