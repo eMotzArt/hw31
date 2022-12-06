@@ -137,29 +137,9 @@ class AdvertisementsDetailView(RetrieveAPIView):
     #     return JsonResponse(AdvertisementSerializer(self.object).data, safe=False)
 
 @method_decorator(csrf_exempt, name='dispatch')
-class AdvertisementsCreateView(CreateView):
+class AdvertisementsCreateView(CreateAPIView):
     model = Advertisement
-    fields = ['name', 'author', 'price', 'description', 'category', 'is_published']
-    def post(self, request, *args, **kwargs):
-        ad_data = json.loads(request.body)
-
-        author_first_name, author_last_name = ad_data['author'].split()
-        try:
-            author = get_object_or_404(User, first_name=author_first_name, last_name=author_last_name)
-        except Http404:
-            return JsonResponse({'status': 'Author not found'}, status=404)
-
-        category_data = ad_data['category']
-        category, _ = Category.objects.get_or_create(name=category_data)
-
-        ad = Advertisement.objects.create(name=ad_data['name'],
-                                          author=author,
-                                          price=ad_data['price'],
-                                          description=ad_data['description'],
-                                          category=category,
-                                          is_published=ad_data['is_published']
-                                          )
-        return JsonResponse(ad.get_dict(), safe=False)
+    serializer_class = AdvertisementSerializer
 
 class AdvertisementsUpdateView(UpdateAPIView):
     queryset = Advertisement.objects.all()
