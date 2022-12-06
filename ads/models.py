@@ -1,3 +1,4 @@
+from django.core.validators import MinLengthValidator
 from django.db import models
 
 
@@ -23,7 +24,7 @@ class Location(models.Model):
         }
 
 class Category(models.Model):
-    slug = models.SlugField(max_length=50)
+    slug = models.SlugField(max_length=10, unique=True, validators=[MinLengthValidator(5)])
     name = models.CharField(max_length=100, unique=True)
 
     class Meta:

@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 import json
 from rest_framework.decorators import permission_classes, api_view
-from rest_framework.generics import RetrieveAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import RetrieveAPIView, UpdateAPIView, DestroyAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -59,14 +59,9 @@ def category_detail_view(request, *args, **kwargs):
     return JsonResponse(CategorySerializer(self.object).data, safe=False)
 
 @method_decorator(csrf_exempt, name='dispatch')
-class CategoryCreateView(CreateView):
+class CategoryCreateView(CreateAPIView):
     model = Category
-    fields = ['name']
-
-    def post(self, request, *args, **kwargs):
-        category_data = json.loads(request.body)
-        category = Category.objects.create(name=category_data['name'])
-        return JsonResponse(category.get_dict(), safe=False)
+    serializer_class = CategorySerializer
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CategoryUpdateView(UpdateView):
