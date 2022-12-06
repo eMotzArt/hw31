@@ -1,12 +1,14 @@
 from rest_framework import serializers
 from users.models import User
+from users.validators import OlderOrEqualNine, NotFromRambler
+
 
 class UserSerializer(serializers.ModelSerializer):
     location = serializers.SlugRelatedField(read_only=True, slug_field='name')
     total_published_ads = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ['id', 'slug', 'first_name', 'last_name', 'username', 'password', 'role', 'age', 'location', 'total_published_ads']
+        fields = ['id', 'slug', 'first_name', 'last_name', 'username', 'password', 'role', 'age', 'location', 'total_published_ads', 'birth_date', 'email']
 
     def get_total_published_ads(self, user):
         return user.advertisement_set.filter(is_published=True).count()
@@ -14,6 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserCreateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
+    birth_date = serializers.DateField(required=True, validators=[OlderOrEqualNine])
+    email = serializers.EmailField(validators=[NotFromRambler])
     class Meta:
         model = User
         fields = '__all__'
