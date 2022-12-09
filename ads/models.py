@@ -1,4 +1,7 @@
+from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
+
+from ads.validators import IsPublishedMustBeFalse
 
 
 class Location(models.Model):
@@ -23,7 +26,7 @@ class Location(models.Model):
         }
 
 class Category(models.Model):
-    slug = models.SlugField(max_length=50)
+    slug = models.SlugField(max_length=10, unique=True, validators=[MinLengthValidator(5)])
     name = models.CharField(max_length=100, unique=True)
 
     class Meta:
@@ -45,13 +48,13 @@ class Advertisement(models.Model):
         verbose_name = "Объявление"
         verbose_name_plural = "Объявления"
     slug = models.SlugField(max_length=50)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=10, null=False)
     author = models.ForeignKey('users.User', on_delete=models.CASCADE)
     price = models.PositiveIntegerField()
-    description = models.CharField(max_length=2000)
+    description = models.CharField(max_length=2000, null=True)
     image = models.ImageField(upload_to='images/')
     category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
-    is_published = models.BooleanField(default=False)
+    is_published = models.BooleanField(default=False, validators=[IsPublishedMustBeFalse])
 
     def get_dict(self):
         return {
